@@ -1,1 +1,853 @@
-min
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Realm | 인디 게임 커머스 & 커뮤니티 플랫폼</title>
+    <style>
+        :root {
+            --bg-dark: #0f111a;
+            --bg-card: #1a1d2d;
+            --bg-input: #25293e;
+            --accent: #7c3aed;
+            --accent-hover: #6d28d9;
+            --accent-secondary: #10b981;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #2e334d;
+            --danger: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
+        
+        /* Header & Navigation */
+        header {
+            background-color: rgba(26, 29, 45, 0.95);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0 5%;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .logo span { color: var(--accent); }
+        nav { display: flex; gap: 10px; }
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            color: #fff;
+            background-color: var(--bg-input);
+        }
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -14px;
+            left: 15%;
+            width: 70%;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 3px;
+        }
+        .badge {
+            background-color: var(--accent);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 99px;
+            margin-left: 4px;
+        }
+        .user-status {
+            font-size: 0.85rem;
+            color: var(--accent-secondary);
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Main Layout */
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: calc(100vh - 200px);
+        }
+        .page-section { display: none; animation: fadeIn 0.3s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hero Banner (Shop) */
+        .hero {
+            background: linear-gradient(135deg, #2e1065 0%, #1e1b4b 100%);
+            border: 1px solid #4c1d95;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .hero h1 { font-size: 2rem; margin-bottom: 10px; }
+        .hero p { color: #c4b5fd; max-width: 600px; }
+
+        /* Game Grid */
+        .section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 24px;
+        }
+        .game-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .game-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+        .game-thumb {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            position: relative;
+        }
+        .discount-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: var(--accent-secondary);
+            color: #064e3b;
+            font-weight: 800;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .game-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .game-genre { font-size: 0.75rem; color: #a78bfa; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+        .game-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+        .game-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 14px; }
+        .price-box .orig-price { font-size: 0.8rem; color: var(--text-muted); text-decoration: line-through; display: block; }
+        .price-box .final-price { font-size: 1.1rem; font-weight: 800; color: #fff; }
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+        .btn:hover { background-color: var(--accent-hover); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: var(--bg-input); }
+        .btn-full { width: 100%; padding: 12px; font-size: 1rem; margin-top: 10px; }
+
+        /* Auth Forms (Login & Signup) */
+        .auth-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+        }
+        .auth-header { text-align: center; margin-bottom: 28px; }
+        .auth-header h2 { font-size: 1.6rem; margin-bottom: 6px; }
+        .auth-header p { color: var(--text-muted); font-size: 0.9rem; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #d1d5db; }
+        .input-row { display: flex; gap: 8px; }
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        input:focus { border-color: var(--accent); }
+        .helper-text { font-size: 0.78rem; margin-top: 5px; color: var(--text-muted); }
+        .helper-text.success { color: var(--accent-secondary); }
+        .helper-text.error { color: var(--danger); }
+
+        /* Genre Tags Checkbox */
+        .genre-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+        .genre-item input { display: none; }
+        .genre-item label {
+            display: block;
+            text-align: center;
+            padding: 8px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin: 0;
+            transition: all 0.2s;
+        }
+        .genre-item input:checked + label {
+            background-color: rgba(124, 58, 237, 0.2);
+            border-color: var(--accent);
+            color: #c4b5fd;
+        }
+
+        /* Terms Box */
+        .terms-box {
+            background-color: var(--bg-input);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        .terms-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .terms-row:last-child { margin-bottom: 0; }
+
+        /* Social Login */
+        .divider { display: flex; align-items: center; text-align: center; margin: 24px 0; color: var(--text-muted); font-size: 0.8rem; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+        .divider:not(:empty)::before { margin-right: 12px; }
+        .divider:not(:empty)::after { margin-left: 12px; }
+        .social-btns { display: flex; gap: 10px; }
+        .btn-kakao { flex: 1; background-color: #fee500; color: #191919; border: none; padding: 11px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .btn-google { flex: 1; background-color: #ffffff; color: #1f2937; border: none; padding: 11px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+        /* Cart Page (Calculation Page) */
+        .cart-layout { display: grid; grid-template-columns: 1.6fr 1fr; gap: 28px; }
+        @media (max-width: 850px) { .cart-layout { grid-template-columns: 1fr; } }
+        .cart-list, .summary-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            gap: 12px;
+        }
+        .cart-item:last-child { border-bottom: none; }
+        .item-left { display: flex; align-items: center; gap: 14px; }
+        .item-icon { width: 54px; height: 54px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+        .qty-control { display: flex; align-items: center; gap: 8px; background: var(--bg-input); padding: 4px 8px; border-radius: 6px; }
+        .qty-btn { background: none; border: none; color: #fff; font-weight: bold; cursor: pointer; width: 22px; height: 22px; }
+        .remove-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.85rem; margin-left: 8px; }
+
+        /* Calculation Summary */
+        .coupon-box { display: flex; gap: 8px; margin: 16px 0; }
+        .point-box { background: var(--bg-input); padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+        .point-header { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; }
+        .calc-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; color: #d1d5db; }
+        .calc-row.discount { color: var(--accent-secondary); }
+        .calc-total {
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+        .calc-total span:last-child { color: #a78bfa; font-size: 1.45rem; }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--accent);
+            color: white;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+        #toast.show { transform: translateY(0); opacity: 1; }
+
+        footer { text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 60px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="nav-container">
+        <a class="logo" onclick="switchTab('shop')">🎮 Pixel <span>Realm</span></a>
+        <nav>
+            <button class="nav-btn active" id="nav-shop" onclick="switchTab('shop')">게임 샵</button>
+            <button class="nav-btn" id="nav-cart" onclick="switchTab('cart')">장바구니 <span class="badge" id="cart-badge">2</span></button>
+            <button class="nav-btn" id="nav-login" onclick="switchTab('login')">로그인</button>
+            <button class="nav-btn" id="nav-signup" onclick="switchTab('signup')">회원가입</button>
+        </nav>
+        <div class="user-status" id="user-status">
+            <span id="welcome-msg"></span>
+            <button class="btn-outline" style="padding:4px 10px; border-radius:6px; font-size:0.8rem; cursor:pointer;" onclick="logout()">로그아웃</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- 1. 게임 샵 (메인) -->
+    <section id="page-shop" class="page-section active">
+        <div class="hero">
+            <div>
+                <h1>독창적인 인디 게임의 세계, Pixel Realm</h1>
+                <p>1인 개발자부터 소규모 인디 스튜디오까지, 숨겨진 명작 게임을 발견하고 장바구니에 담아보세요.</p>
+            </div>
+            <button class="btn" onclick="switchTab('cart')">장바구니 결제 계산하기 →</button>
+        </div>
+        <div class="section-title">
+            <span>🔥 인기 및 할인 인디 게임 카탈로그</span>
+        </div>
+        <div class="game-grid" id="game-grid"></div>
+    </section>
+
+    <!-- 2. 장바구니 & 결제 금액 실시간 계산 페이지 -->
+    <section id="page-cart" class="page-section">
+        <div class="section-title">
+            <span>🛒 장바구니 및 결제 금액 계산</span>
+            <button class="btn btn-outline" onclick="resetCart()" style="font-size:0.8rem; padding:6px 12px;">기본 상품 불러오기</button>
+        </div>
+        <div class="cart-layout">
+            <div class="cart-list">
+                <h3 style="margin-bottom: 12px;">선택한 디지털 게임 키 목록</h3>
+                <div id="cart-items-container"></div>
+            </div>
+
+            <div class="summary-box">
+                <h3 style="margin-bottom: 16px;">결제 예정 금액 계산서</h3>
+                
+                <!-- 프로모션 쿠폰 입력 -->
+                <label style="font-size:0.85rem; color:#d1d5db; font-weight:600;">할인 쿠폰 코드 (예: PIXEL10 / INDIE20)</label>
+                <div class="coupon-box">
+                    <input type="text" id="coupon-input" placeholder="쿠폰 코드 입력 (PIXEL10)">
+                    <button class="btn" onclick="applyCoupon()" style="white-space:nowrap;">적용</button>
+                </div>
+                <p id="coupon-msg" class="helper-text" style="margin-bottom:14px;">* PIXEL10 입력 시 10% 추가 할인, INDIE20 입력 시 20% 할인</p>
+
+                <!-- 포인트 사용 계산 -->
+                <div class="point-box">
+                    <div class="point-header">
+                        <span>보유 포인트: <strong>5,000 P</strong></span>
+                        <button type="button" onclick="useAllPoints()" style="background:none; border:none; color:#a78bfa; cursor:pointer; font-weight:600;">전액 사용</button>
+                    </div>
+                    <input type="text" id="point-input" value="0" oninput="calculateTotal()" placeholder="사용할 포인트 입력">
+                </div>
+
+                <!-- 실시간 금액 산출 내역 -->
+                <div class="calc-row">
+                    <span>총 상품 정가</span>
+                    <span id="calc-orig">0원</span>
+                </div>
+                <div class="calc-row discount">
+                    <span>상점 기본 할인</span>
+                    <span id="calc-base-disc">-0원</span>
+                </div>
+                <div class="calc-row discount">
+                    <span>쿠폰 추가 할인 (<span id="applied-coupon-name">미적용</span>)</span>
+                    <span id="calc-coupon-disc">-0원</span>
+                </div>
+                <div class="calc-row discount">
+                    <span>포인트 차감</span>
+                    <span id="calc-point-disc">-0원</span>
+                </div>
+                <div class="calc-row">
+                    <span>부가가치세 (VAT 10% 포함)</span>
+                    <span id="calc-vat">0원</span>
+                </div>
+                <div class="calc-total">
+                    <span>최종 결제 금액</span>
+                    <span id="calc-final">0원</span>
+                </div>
+                <p class="helper-text" style="text-align:right; margin-top:6px;">결제 완료 시 <strong id="calc-earn-point" style="color:#10b981;">0 P</strong> 적립 예정</p>
+
+                <button class="btn btn-full" onclick="checkout()">안전 결제 및 게임 키 발급</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 로그인 페이지 -->
+    <section id="page-login" class="page-section">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>Pixel Realm 로그인</h2>
+                <p>인디 게임 라이브러리와 커뮤니티에 접속하세요</p>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>아이디</label>
+                    <input type="text" id="login-id" placeholder="아이디를 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label>비밀번호</label>
+                    <input type="password" id="login-pw" placeholder="비밀번호를 입력하세요" required>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; margin-bottom:20px;">
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer; color:var(--text-muted);">
+                        <input type="checkbox" checked> 로그인 상태 유지
+                    </label>
+                    <a href="#" onclick="showToast('비밀번호 재설정 링크가 이메일로 발송되었습니다.'); return false;" style="color:#a78bfa; text-decoration:none;">ID / PW 찾기</a>
+                </div>
+                <button type="submit" class="btn btn-full">로그인</button>
+            </form>
+
+            <div class="divider">또는 소셜 계정으로 간편 로그인</div>
+            <div class="social-btns">
+                <button class="btn-kakao" onclick="socialLogin('카카오')">💬 카카오 로그인</button>
+                <button class="btn-google" onclick="socialLogin('Google')">G Google 로그인</button>
+            </div>
+
+            <p style="text-align:center; margin-top:24px; font-size:0.9rem; color:var(--text-muted);">
+                아직 계정이 없으신가요? <a href="#" onclick="switchTab('signup'); return false;" style="color:#a78bfa; font-weight:600; text-decoration:none;">회원가입</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- 4. 회원가입 페이지 -->
+    <section id="page-signup" class="page-section">
+        <div class="auth-container" style="max-width:540px;">
+            <div class="auth-header">
+                <h2>회원가입 (Sign Up)</h2>
+                <p>맞춤형 인디 게임 추천을 위한 계정을 생성합니다</p>
+            </div>
+            <form onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label>아이디 *</label>
+                    <div class="input-row">
+                        <input type="text" id="reg-id" placeholder="영문, 숫자 조합 4~12자" required>
+                        <button type="button" class="btn btn-outline" onclick="checkDuplicate('id')" style="white-space:nowrap;">중복확인</button>
+                    </div>
+                    <p id="id-msg" class="helper-text">사용할 아이디 입력 후 중복확인을 눌러주세요.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>비밀번호 *</label>
+                    <input type="password" id="reg-pw" placeholder="8자 이상 영문, 숫자, 특수문자 포함" oninput="validatePassword()" required>
+                </div>
+
+                <div class="form-group">
+                    <label>비밀번호 확인 *</label>
+                    <input type="password" id="reg-pw-confirm" placeholder="비밀번호를 다시 입력하세요" oninput="validatePassword()" required>
+                    <p id="pw-msg" class="helper-text"></p>
+                </div>
+
+                <div class="form-group">
+                    <label>닉네임 *</label>
+                    <div class="input-row">
+                        <input type="text" id="reg-nick" placeholder="커뮤니티에서 사용할 닉네임" required>
+                        <button type="button" class="btn btn-outline" onclick="checkDuplicate('nick')" style="white-space:nowrap;">중복확인</button>
+                    </div>
+                    <p id="nick-msg" class="helper-text"></p>
+                </div>
+
+                <div class="form-group">
+                    <label>선호 장르 선택 (맞춤형 게임 추천용 - 복수 선택 가능)</label>
+                    <div class="genre-grid">
+                        <div class="genre-item"><input type="checkbox" id="g-rpg" value="RPG" checked><label for="g-rpg">⚔️ RPG</label></div>
+                        <div class="genre-item"><input type="checkbox" id="g-action" value="액션"><label for="g-action">🔥 액션</label></div>
+                        <div class="genre-item"><input type="checkbox" id="g-rogue" value="로그라이크" checked><label for="g-rogue">🎲 로그라이크</label></div>
+                        <div class="genre-item"><input type="checkbox" id="g-puzzle" value="퍼즐"><label for="g-puzzle">🧩 퍼즐</label></div>
+                        <div class="genre-item"><input type="checkbox" id="g-sim" value="시뮬레이션"><label for="g-sim">🏗️ 시뮬레이션</label></div>
+                        <div class="genre-item"><input type="checkbox" id="g-story" value="어드벤처"><label for="g-story">📖 어드벤처</label></div>
+                    </div>
+                </div>
+
+                <div class="terms-box">
+                    <div class="terms-row" style="border-bottom:1px solid var(--border); padding-bottom:8px;">
+                        <input type="checkbox" id="agree-all" onchange="toggleAllTerms(this)">
+                        <label for="agree-all" style="font-weight:700; cursor:pointer;">전체 약관에 모두 동의합니다</label>
+                    </div>
+                    <div class="terms-row">
+                        <input type="checkbox" id="agree-1" class="term-chk" required>
+                        <label for="agree-1" style="cursor:pointer;">[필수] Pixel Realm 서비스 이용약관 동의</label>
+                    </div>
+                    <div class="terms-row">
+                        <input type="checkbox" id="agree-2" class="term-chk" required>
+                        <label for="agree-2" style="cursor:pointer;">[필수] 개인정보 수집 및 이용 동의</label>
+                    </div>
+                    <div class="terms-row">
+                        <input type="checkbox" id="agree-3" class="term-chk">
+                        <label for="agree-3" style="cursor:pointer;">[선택] 인디 게임 할인 및 신작 소식 알림 수신</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-full">회원가입 완료</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<div id="toast">알림 메시지</div>
+
+<footer>
+    <p>© 2026 Pixel Realm (인디 게임 허브) | 기획 및 제작: 2335028 민상기</p>
+</footer>
+
+<script>
+    // 게임 데이터
+    const games = [
+        { id: 1, title: "섀도우 던전: 100층의 비밀", genre: "로그라이크 / RPG", origPrice: 24000, price: 18000, discount: 25, icon: "🗡️", bg: "#312e81", desc: "무작위로 생성되는 심연의 던전을 탐험하고 전설의 도면을 수집하세요." },
+        { id: 2, title: "네온 드리프터 2099", genre: "사이버펑크 액션", origPrice: 32000, price: 25600, discount: 20, icon: "🏍️", bg: "#4c1d95", desc: "사이버 도시를 질주하며 거대 기업에 맞서는 하이스피드 액션 게임." },
+        { id: 3, title: "별빛 농장 연대기", genre: "힐링 시뮬레이션", origPrice: 16500, price: 16500, discount: 0, icon: "🌾", bg: "#065f46", desc: "도심을 떠나 신비로운 섬에서 작물을 키우고 마을 주민들과 교류하세요." },
+        { id: 4, title: "크로노 퍼즐: 시간의 톱니", genre: "퍼즐 / 어드벤처", origPrice: 15000, price: 10500, discount: 30, icon: "⏳", bg: "#78350f", desc: "과거와 현재의 시간을 조작하여 고대 시계탑의 수수께끼를 풀어보세요." }
+    ];
+
+    // 상태 변수
+    let cart = [
+        { id: 1, qty: 1 },
+        { id: 2, qty: 1 }
+    ];
+    let couponRate = 0;
+    let couponCode = "";
+    let idChecked = false;
+    let nickChecked = false;
+
+    // 탭 전환
+    function switchTab(tabName) {
+        document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('page-' + tabName).classList.add('active');
+        document.getElementById('nav-' + tabName).classList.add('active');
+        if (tabName === 'cart') renderCart();
+    }
+
+    // 알림 토스트
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    // 샵 렌더링
+    function renderShop() {
+        const grid = document.getElementById('game-grid');
+        grid.innerHTML = games.map(g => `
+            <div class="game-card">
+                <div class="game-thumb" style="background-color:${g.bg};">
+                    ${g.icon}
+                    ${g.discount > 0 ? `<span class="discount-tag">-${g.discount}%</span>` : ''}
+                </div>
+                <div class="game-info">
+                    <div>
+                        <div class="game-genre">${g.genre}</div>
+                        <div class="game-title">${g.title}</div>
+                        <div class="game-desc">${g.desc}</div>
+                    </div>
+                    <div class="price-row">
+                        <div class="price-box">
+                            ${g.discount > 0 ? `<span class="orig-price">${g.origPrice.toLocaleString()}원</span>` : ''}
+                            <span class="final-price">${g.price.toLocaleString()}원</span>
+                        </div>
+                        <button class="btn" onclick="addToCart(${g.id})">장바구니 담기</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 장바구니 추가
+    function addToCart(gameId) {
+        const found = cart.find(item => item.id === gameId);
+        if (found) {
+            found.qty += 1;
+        } else {
+            cart.push({ id: gameId, qty: 1 });
+        }
+        updateBadge();
+        showToast('장바구니에 게임이 담겼습니다!');
+    }
+
+    function updateBadge() {
+        const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+        document.getElementById('cart-badge').textContent = totalQty;
+    }
+
+    // 장바구니 렌더링 및 계산
+    function renderCart() {
+        const container = document.getElementById('cart-items-container');
+        if (cart.length === 0) {
+            container.innerHTML = `<p style="color:var(--text-muted); padding:30px 0; text-align:center;">장바구니가 비어 있습니다. 게임 샵에서 게임을 담아보세요!</p>`;
+            calculateTotal();
+            return;
+        }
+
+        container.innerHTML = cart.map(item => {
+            const g = games.find(x => x.id === item.id);
+            return `
+                <div class="cart-item">
+                    <div class="item-left">
+                        <div class="item-icon" style="background:${g.bg};">${g.icon}</div>
+                        <div>
+                            <div style="font-weight:700;">${g.title}</div>
+                            <div style="font-size:0.8rem; color:var(--text-muted);">${g.genre} | 단가 ${g.price.toLocaleString()}원</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:14px;">
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="changeQty(${g.id}, -1)">-</button>
+                            <span style="font-weight:600; min-width:20px; text-align:center;">${item.qty}</span>
+                            <button class="qty-btn" onclick="changeQty(${g.id}, 1)">+</button>
+                        </div>
+                        <div style="font-weight:700; min-width:85px; text-align:right;">
+                            ${(g.price * item.qty).toLocaleString()}원
+                        </div>
+                        <button class="remove-btn" onclick="removeItem(${g.id})">삭제</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        calculateTotal();
+    }
+
+    function changeQty(id, delta) {
+        const item = cart.find(x => x.id === id);
+        if (!item) return;
+        item.qty += delta;
+        if (item.qty <= 0) {
+            cart = cart.filter(x => x.id !== id);
+        }
+        updateBadge();
+        renderCart();
+    }
+
+    function removeItem(id) {
+        cart = cart.filter(x => x.id !== id);
+        updateBadge();
+        renderCart();
+    }
+
+    function resetCart() {
+        cart = [{ id: 1, qty: 1 }, { id: 2, qty: 1 }];
+        couponRate = 0;
+        couponCode = "";
+        document.getElementById('coupon-input').value = "";
+        document.getElementById('point-input').value = "0";
+        document.getElementById('applied-coupon-name').textContent = "미적용";
+        updateBadge();
+        renderCart();
+        showToast('기본 장바구니 상태로 초기화되었습니다.');
+    }
+
+    function applyCoupon() {
+        const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+        const msg = document.getElementById('coupon-msg');
+        if (code === 'PIXEL10') {
+            couponRate = 0.10;
+            couponCode = 'PIXEL10 (10%)';
+            msg.textContent = '✅ PIXEL10 쿠폰이 적용되었습니다! (10% 할인)';
+            msg.className = 'helper-text success';
+        } else if (code === 'INDIE20') {
+            couponRate = 0.20;
+            couponCode = 'INDIE20 (20%)';
+            msg.textContent = '✅ INDIE20 쿠폰이 적용되었습니다! (20% 할인)';
+            msg.className = 'helper-text success';
+        } else {
+            couponRate = 0;
+            couponCode = '미적용';
+            msg.textContent = '❌ 유효하지 않은 쿠폰입니다. PIXEL10 또는 INDIE20을 입력하세요.';
+            msg.className = 'helper-text error';
+        }
+        document.getElementById('applied-coupon-name').textContent = couponCode;
+        calculateTotal();
+    }
+
+    function useAllPoints() {
+        document.getElementById('point-input').value = 5000;
+        calculateTotal();
+    }
+
+    function calculateTotal() {
+        let origSum = 0;
+        let saleSum = 0;
+
+        cart.forEach(item => {
+            const g = games.find(x => x.id === item.id);
+            origSum += g.origPrice * item.qty;
+            saleSum += g.price * item.qty;
+        });
+
+        const baseDisc = origSum - saleSum;
+        const couponDisc = Math.floor(saleSum * couponRate);
+        
+        let pointInput = parseInt(document.getElementById('point-input').value.replace(/[^0-9]/g, '')) || 0;
+        if (pointInput > 5000) {
+            pointInput = 5000;
+            document.getElementById('point-input').value = 5000;
+        }
+        const maxUsablePoint = Math.max(0, saleSum - couponDisc);
+        const appliedPoint = Math.min(pointInput, maxUsablePoint);
+
+        const finalPrice = Math.max(0, saleSum - couponDisc - appliedPoint);
+        const vat = Math.floor(finalPrice / 11);
+        const earnPoint = Math.floor(finalPrice * 0.03);
+
+        document.getElementById('calc-orig').textContent = origSum.toLocaleString() + '원';
+        document.getElementById('calc-base-disc').textContent = '-' + baseDisc.toLocaleString() + '원';
+        document.getElementById('calc-coupon-disc').textContent = '-' + couponDisc.toLocaleString() + '원';
+        document.getElementById('calc-point-disc').textContent = '-' + appliedPoint.toLocaleString() + '원';
+        document.getElementById('calc-vat').textContent = vat.toLocaleString() + '원';
+        document.getElementById('calc-final').textContent = finalPrice.toLocaleString() + '원';
+        document.getElementById('calc-earn-point').textContent = earnPoint.toLocaleString() + ' P';
+    }
+
+    function checkout() {
+        if (cart.length === 0) {
+            showToast('장바구니에 결제할 상품이 없습니다.');
+            return;
+        }
+        const total = document.getElementById('calc-final').textContent;
+        alert(`[Pixel Realm 결제 완료]\n최종 결제 금액: ${total}\n디지털 게임 활성화 키가 마이페이지 보관함으로 발급되었습니다!`);
+        cart = [];
+        updateBadge();
+        renderCart();
+    }
+
+    // 회원가입 유효성 검증
+    function checkDuplicate(type) {
+        if (type === 'id') {
+            const val = document.getElementById('reg-id').value.trim();
+            const msg = document.getElementById('id-msg');
+            if (val.length < 4) {
+                msg.textContent = '❌ 아이디는 4자 이상 입력해주세요.';
+                msg.className = 'helper-text error';
+                idChecked = false;
+                return;
+            }
+            if (val === 'admin' || val === 'test') {
+                msg.textContent = '❌ 이미 사용 중인 아이디입니다.';
+                msg.className = 'helper-text error';
+                idChecked = false;
+            } else {
+                msg.textContent = `✅ '${val}'은(는) 사용 가능한 아이디입니다.`;
+                msg.className = 'helper-text success';
+                idChecked = true;
+            }
+        } else {
+            const val = document.getElementById('reg-nick').value.trim();
+            const msg = document.getElementById('nick-msg');
+            if (val.length < 2) {
+                msg.textContent = '❌ 닉네임은 2자 이상 입력해주세요.';
+                msg.className = 'helper-text error';
+                nickChecked = false;
+                return;
+            }
+            msg.textContent = `✅ '${val}' 닉네임을 사용할 수 있습니다.`;
+            msg.className = 'helper-text success';
+            nickChecked = true;
+        }
+    }
+
+    function validatePassword() {
+        const pw = document.getElementById('reg-pw').value;
+        const pwc = document.getElementById('reg-pw-confirm').value;
+        const msg = document.getElementById('pw-msg');
+        if (!pwc) { msg.textContent = ''; return; }
+        if (pw === pwc) {
+            msg.textContent = '✅ 비밀번호가 일치합니다.';
+            msg.className = 'helper-text success';
+        } else {
+            msg.textContent = '❌ 비밀번호가 일치하지 않습니다.';
+            msg.className = 'helper-text error';
+        }
+    }
+
+    function toggleAllTerms(source) {
+        document.querySelectorAll('.term-chk').forEach(chk => chk.checked = source.checked);
+    }
+
+    function handleSignup(e) {
+        e.preventDefault();
+        if (!idChecked) { showToast('아이디 중복확인을 진행해주세요.'); return; }
+        if (!nickChecked) { showToast('닉네임 중복확인을 진행해주세요.'); return; }
+        const pw = document.getElementById('reg-pw').value;
+        const pwc = document.getElementById('reg-pw-confirm').value;
+        if (pw !== pwc) { showToast('비밀번호 확인이 일치하지 않습니다.'); return; }
+
+        const nick = document.getElementById('reg-nick').value;
+        const genres = Array.from(document.querySelectorAll('.genre-item input:checked')).map(el => el.value);
+        
+        alert(`🎉 회원가입을 환영합니다, ${nick}님!\n선택한 선호 장르: ${genres.join(', ') || '없음'}\n로그인 페이지로 이동합니다.`);
+        document.getElementById('login-id').value = document.getElementById('reg-id').value;
+        switchTab('login');
+    }
+
+    // 로그인 처리
+    function handleLogin(e) {
+        e.preventDefault();
+        const id = document.getElementById('login-id').value;
+        completeLogin(id);
+    }
+
+    function socialLogin(provider) {
+        completeLogin(`${provider}_게이머`);
+    }
+
+    function completeLogin(username) {
+        document.getElementById('nav-login').style.display = 'none';
+        document.getElementById('nav-signup').style.display = 'none';
+        const status = document.getElementById('user-status');
+        status.style.display = 'flex';
+        document.getElementById('welcome-msg').textContent = `👾 ${username}님 접속중`;
+        showToast(`${username}님, Pixel Realm에 로그인되었습니다!`);
+        switchTab('shop');
+    }
+
+    function logout() {
+        document.getElementById('nav-login').style.display = 'inline-block';
+        document.getElementById('nav-signup').style.display = 'inline-block';
+        document.getElementById('user-status').style.display = 'none';
+        showToast('로그아웃 되었습니다.');
+    }
+
+    // 초기 실행
+    renderShop();
+    renderCart();
+</script>
+</body>
+</html>
