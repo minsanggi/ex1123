@@ -1,1 +1,263 @@
-# ex1123
+[google_form_hub_web_page (2).html](https://github.com/user-attachments/files/35248294/google_form_hub_web_page.2.html)<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 폼 설문조사 | GitHub Pages</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between antialiased">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Brand Title & Logo -->
+                <a href="#" class="flex items-center space-x-3 group">
+                    <div class="w-9 h-9 rounded-lg bg-purple-600 text-white flex items-center justify-center shadow-md group-hover:bg-purple-700 transition-colors">
+                        <i class="fa-regular fa-clipboard text-lg"></i>
+                    </div>
+                    <span class="text-lg font-bold text-slate-900 tracking-tight">설문조사 양식</span>
+                </a>
+
+                <!-- Desktop Navigation Bar -->
+                <nav class="hidden md:flex items-center space-x-3">
+                    <!-- 1. Scroll to Embed Form -->
+                    <a href="#form-section" class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-purple-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-file-lines mr-1.5 text-purple-500"></i>임베드 폼
+                    </a>
+
+                    <!-- 2. Open in New Window -->
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-purple-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-arrow-up-right-from-square mr-1.5 text-purple-500"></i>새 창에서 열기
+                    </a>
+
+                    <!-- 3. Copy Link Button -->
+                    <button onclick="copyFormLink()" class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-purple-600 hover:bg-slate-100 transition-colors">
+                        <i class="fa-solid fa-link mr-1.5 text-purple-500"></i>링크 복사
+                    </button>
+
+                    <!-- Direct Primary Action Button -->
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="ml-2 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow transition-colors">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>설문 참여하기
+                    </a>
+                </nav>
+
+                <!-- Mobile Navigation Toggle -->
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-btn" type="button" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none" aria-label="메뉴 열기">
+                        <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-4 space-y-2">
+            <a href="#form-section" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-purple-600">
+                <i class="fa-solid fa-file-lines mr-2 text-purple-500"></i>임베드 폼
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-purple-600">
+                <i class="fa-solid fa-arrow-up-right-from-square mr-2 text-purple-500"></i>새 창에서 열기
+            </a>
+            <button onclick="copyFormLink()" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-purple-600">
+                <i class="fa-solid fa-link mr-2 text-purple-500"></i>링크 복사
+            </button>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="block w-full text-center mt-3 px-4 py-2.5 rounded-lg font-semibold text-white bg-purple-600 hover:bg-purple-700">
+                <i class="fa-solid fa-paper-plane mr-2"></i>새 창에서 작성하기
+            </a>
+        </div>
+    </header>
+
+    <!-- Notification Toast for Copy Link -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center space-x-3 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-green-400 text-lg"></i>
+        <span id="toast-message" class="text-sm font-medium">링크가 복사되었습니다!</span>
+    </div>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-b from-purple-50 to-slate-50 py-10 md:py-14 border-b border-slate-200/60">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    온라인 설문조사
+                </h1>
+                <p class="mt-3 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
+                    아래의 폼을 통해 설문에 작성해 주세요. 프레임이 정상 작동하지 않는 경우 상단이나 하단의 새 창 링크를 이용하실 수 있습니다.
+                </p>
+
+                <!-- Quick Action Buttons -->
+                <div class="mt-6 flex flex-wrap justify-center gap-3">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="px-5 py-2.5 rounded-lg font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow-sm transition-all flex items-center gap-2">
+                        <span>새 창에서 폼 작성하기</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </a>
+                    <button onclick="copyFormLink()" 
+                            class="px-5 py-2.5 rounded-lg font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 shadow-sm transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-copy text-purple-600"></i>
+                        <span>구글 폼 링크 복사</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Embed Section -->
+        <section id="form-section" class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+            
+            <!-- Fallback Banner ABOVE Form -->
+            <div class="mb-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-info text-amber-600 text-lg shrink-0"></i>
+                    <span>구글 폼이 화면에 표시되지 않거나 브라우저 권한 문제 발생 시:</span>
+                </div>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="whitespace-nowrap font-semibold text-purple-700 hover:text-purple-900 underline flex items-center gap-1">
+                    직접 새 창에서 작성하기 <i class="fa-solid fa-angle-right text-xs"></i>
+                </a>
+            </div>
+
+            <!-- Main Form Card (Clear, Unobstructed Iframe) -->
+            <div class="bg-white rounded-2xl border border-slate-300 shadow-lg overflow-hidden">
+                <div class="bg-slate-100 px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+                    <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        <i class="fa-brands fa-google text-purple-600 mr-1.5"></i>Google Form Embedded
+                    </span>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="text-xs text-purple-700 hover:underline font-medium flex items-center gap-1">
+                        새 창으로 크게 보기 <i class="fa-solid fa-up-right-from-square text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- Clean, direct iframe container (No blocking JS overlays) -->
+                <div class="w-full bg-white">
+                    <iframe 
+                        src="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform?embedded=true" 
+                        style="width: 100%; min-height: 950px; height: 85vh; border: 0;"
+                        title="Google Form Survey">
+                        구글 폼을 로드할 수 없습니다. <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" target="_blank" rel="noopener noreferrer">여기</a>를 눌러 직접 작성해 주세요.
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Fallback Link BELOW Form -->
+            <div class="mt-4 p-4 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 text-sm text-center">
+                폼 제출 후 화면이 반응하지 않거나 에러가 생기나요? 
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="font-semibold text-purple-700 hover:underline ml-1">
+                    여기 클릭하여 새 창에서 작성 완료하기 <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                </a>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p>© Google Form GitHub Pages Portal</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="hover:text-purple-600 transition-colors">
+                구글 폼 원본 링크 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
+            </a>
+        </div>
+    </footer>
+
+    <!-- JavaScript Functions -->
+    <script>
+        const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeY7n-iRJfR56pN0T8SZOBU7FNyCl1eCwjts_J_2wK9mIChkA/viewform";
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                if (isHidden) {
+                    mobileMenu.classList.remove('hidden');
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-xmark');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.remove('fa-xmark');
+                    menuIcon.classList.add('fa-bars');
+                }
+            });
+        }
+
+        // Copy Link to Clipboard Function
+        function copyFormLink() {
+            // Using execCommand for iframe/sandboxed compatibility
+            const tempInput = document.createElement('input');
+            tempInput.value = FORM_URL;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("구글 폼 링크가 복사되었습니다!");
+                } else {
+                    showToast("링크 복사를 완료하지 못했습니다.");
+                }
+            } catch (err) {
+                showToast("링크 복사 실패: 직접 링크를 선택해 주세요.");
+            } finally {
+                document.body.removeChild(tempInput);
+            }
+        }
+
+        // Display Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            if (!toast || !toastMsg) return;
+            
+            toastMsg.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
